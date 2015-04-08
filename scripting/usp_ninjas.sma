@@ -115,7 +115,7 @@ public Event_CTWin()
 	
 	iCount = 0;
 	
-	for( client = 0; client <= g_iMaxPlayers; client++ )
+	for( client = 1; client <= g_iMaxPlayers; client++ )
 	{
 		if( is_user_connected( client ) )
 		{
