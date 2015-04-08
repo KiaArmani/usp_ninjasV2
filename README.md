@@ -8,3 +8,7 @@ Remake of wrecked_'s original USP Ninjas Mod.
 
 # Recommended Plugins
 Walkguard by mogel - https://forums.alliedmods.net/showthread.php?t=55245
+
+# Walkguard Zones
+You can find them in the configs/walkguard folder. Also, here are some screenshots of the zones:
+http://steamcommunity.com/id/Xi4/screenshots/
