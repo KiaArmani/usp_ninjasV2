@@ -191,9 +191,12 @@ public Ham_OnPrePlayerTakeDamage(const id, const iInflictor, const iAttacker, co
 
 public Ham_OnPostUSPDeploy(iEnt)
 {
+	if(!pev_valid(iEnt))
+		return HAM_HANDLED
+	
 	new id = get_pdata_cbase(iEnt, m_pPlayer, XO_WEAPON)
 	if(!is_user_alive(id))
-		return PLUGIN_HANDLED
+		return HAM_HANDLED
 	
 	if (!cs_get_weapon_silen(iEnt))
 		cs_set_weapon_silen(iEnt, 1, 0)  
@@ -207,9 +210,12 @@ public Ham_OnPostUSPDeploy(iEnt)
 
 public Ham_OnPreUSPPrimary(iEnt)
 {
+	if(!pev_valid(iEnt))
+		return HAM_HANDLED
+	
 	new id = get_pdata_cbase(iEnt, m_pPlayer, XO_WEAPON)
 	if(!is_user_alive(id))
-		return PLUGIN_HANDLED
+		return HAM_HANDLED
 
 	if (!cs_get_weapon_silen(iEnt))
 	{
@@ -225,9 +231,12 @@ public Ham_OnPreUSPPrimary(iEnt)
 
 public Ham_OnPostUSPSecondary(iEnt)
 {
+	if(!pev_valid(iEnt))
+		return HAM_HANDLED
+		
 	new id = get_pdata_cbase(iEnt, m_pPlayer, XO_WEAPON)
 	if(!is_user_alive(id))
-		return PLUGIN_HANDLED
+		return HAM_HANDLED
 
 	if (!cs_get_weapon_silen(iEnt))
 	{
@@ -362,6 +371,3 @@ public Game_CountdownHUD()
 
 
 
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ deff0{\\ fonttbl{\\ f0\\ fnil Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang1031\\ f0\\ fs16 \n\\ par }
-*/
