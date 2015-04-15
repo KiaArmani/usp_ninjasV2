@@ -9,30 +9,8 @@
 #include <engine>
 
 #define PLUGIN "usp_ninjas V2"
-#define VERSION "2.0.1"
+#define VERSION "2.0.2"
 #define AUTHOR "Kia 'Xi4' Armani"
-
-// ===============================================================================
-// 	Plugin Options
-// ===============================================================================
-
-#define GAME_HIDETIME 15.0
-// Time in Seconds how long Terrorists have time to hide themselves at round begin.
-
-#define DMG_TOGGLEFALLDAMGE 1
-// If set to 1, CTs will not recieve falldamage.
-
-#define HUD_REFRESHRATE 1.0
-// Time in Seconds how often the HUD will refresh.
-
-#define ENV_LIGHTP "e"
-// Sets the Environment Light Intensity
-
-#define USP_CLIPSIZE 12
-// Sets Clip size for the USP you get.
-
-#define USP_CLIPAMOUNT 1
-// Amount of Clips you get for your USP
 
 // ===============================================================================
 // 	Variables
@@ -68,6 +46,9 @@ new g_HudSyncObj
 /* Hamsandwich */
 new Ham:Ham_Player_ResetMaxSpeed = Ham_Item_PreFrame 
 
+/* CVars */
+new g_cHideTime, g_cDamageToggle, g_cHUDRefreshRate, g_cLight, g_cUSP_Clipsize, g_cUSP_Clipamount
+
 // ===============================================================================
 // 	plugin_init
 // ===============================================================================
@@ -80,6 +61,14 @@ public plugin_init()
 	register_event("HLTV", "Event_HLTVNewRound", "a", "1=0", "2=0")
 	register_event("SendAudio", "Event_CTWin", "a", "2&%!MRAD_ctwin" ) 
 	
+	/* CVars */
+	g_cHideTime = register_cvar("un_hidetime", "15.0")
+	g_cDamageToggle = register_cvar("un_nofalldmg", "1")
+	g_cHUDRefreshRate = register_cvar("un_hudrate", "1.0")
+	g_cLight = register_cvar("un_light", "e")
+	g_cUSP_Clipsize = register_cvar("un_usp_clipsize", "12")
+	g_cUSP_Clipamount = register_cvar("un_usp_clipamount", "1")
+	
 	/* Hamsandwich */
 	RegisterHam(Ham_Spawn, "player", "Ham_OnPostPlayerSpawn", 1)
 	RegisterHam(Ham_TakeDamage, "player", "Ham_OnPrePlayerTakeDamage")
@@ -91,9 +80,11 @@ public plugin_init()
 	/* HUD */
 	g_HudSyncObj = CreateHudSyncObj()
 	
-	set_lights(ENV_LIGHTP)
-	g_iMaxPlayers = get_maxplayers()
+	new szLight[2]
+	get_pcvar_string(g_cLight, szLight, charsmax(szLight))
+	set_lights(szLight)
 	
+	g_iMaxPlayers = get_maxplayers()
 }
 
 // ===============================================================================
@@ -165,8 +156,8 @@ public Ham_OnPostPlayerSpawn(id)
 		
 		give_item(id, "weapon_knife") 		// Give him a knife
 		new iUSP = give_item(id, "weapon_usp") 	// and a USP.
-		cs_set_weapon_ammo(iUSP, USP_CLIPSIZE)
-		cs_set_user_bpammo(id, CSW_USP, USP_CLIPAMOUNT * 12)
+		cs_set_weapon_ammo(iUSP, get_pcvar_num(g_cUSP_Clipsize))
+		cs_set_user_bpammo(id, CSW_USP, get_pcvar_num(g_cUSP_Clipamount) * 12)
 	}
 }
 
@@ -176,7 +167,7 @@ public Ham_OnPostPlayerSpawn(id)
 
 public Ham_OnPrePlayerTakeDamage(const id, const iInflictor, const iAttacker, const Float:flDamage, const iDamageType )
 {
-	if( iDamageType == DMG_FALL && DMG_TOGGLEFALLDAMGE && cs_get_user_team(id) == CS_TEAM_CT)
+	if( iDamageType == DMG_FALL && get_pcvar_num(g_cDamageToggle) && cs_get_user_team(id) == CS_TEAM_CT)
 	{
 		SetHamReturnInteger(0)
 		return HAM_SUPERCEDE
@@ -277,7 +268,7 @@ public Game_RemoveTasks()
 
 public Game_StartTimer()
 {
-	set_task(GAME_HIDETIME, "Game_StopTimer", g_iTaskBaseID)
+	set_task(get_pcvar_float(g_cHideTime), "Game_StopTimer", g_iTaskBaseID)
 	Game_ToggleCountdownHUD(1)
 }
 
@@ -335,9 +326,9 @@ public Game_ToggleCountdownHUD(iState)
 {
 	if(iState == 1)
 	{
-		g_iCountDownTime = floatround(GAME_HIDETIME)
+		g_iCountDownTime = floatround(get_pcvar_float(g_cHideTime))
 		Game_CountdownHUD()
-		set_task(HUD_REFRESHRATE, "Game_CountdownHUD", g_iTaskHUDID, _, _, "b")
+		set_task(get_pcvar_float(g_cHUDRefreshRate), "Game_CountdownHUD", g_iTaskHUDID, _, _, "b")
 	}
 	else
 	{
@@ -356,7 +347,7 @@ public Game_CountdownHUD()
 	new iPlayerCount, i, id 
 	get_players(szPlayers, iPlayerCount, "a") // Get all alive players
 	
-	set_hudmessage(0, 255, 0, -1.0, 0.15, 0, 6.0, HUD_REFRESHRATE)
+	set_hudmessage(0, 255, 0, -1.0, 0.15, 0, 6.0, get_pcvar_float(g_cHUDRefreshRate))
 	
 	for (i = 0; i < iPlayerCount; i++) 
 	{
@@ -371,6 +362,3 @@ public Game_CountdownHUD()
 
 
 
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ deff0{\\ fonttbl{\\ f0\\ fnil Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang1031\\ f0\\ fs16 \n\\ par }
-*/
