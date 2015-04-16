@@ -253,8 +253,8 @@ public Ham_OnPostPlayerMaxRes(id)
 
 public Game_RemoveTasks()
 {
-	if(task_exists(g_iTaskBaseID)) remove_task(g_iTaskBaseID)
-	if(task_exists(g_iTaskHUDID)) remove_task(g_iTaskHUDID)
+	remove_task(g_iTaskBaseID)
+	remove_task(g_iTaskHUDID)
 }
 
 // ===============================================================================
@@ -327,8 +327,7 @@ public Game_ToggleCountdownHUD(iState)
 	}
 	else
 	{
-		if(task_exists(g_iTaskHUDID)) 
-			remove_task(g_iTaskHUDID)
+		remove_task(g_iTaskHUDID)
 	}
 }
 
