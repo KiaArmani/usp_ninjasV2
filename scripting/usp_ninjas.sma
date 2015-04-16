@@ -93,7 +93,10 @@ public plugin_init()
 
 public Event_HLTVNewRound()
 {
-	set_task(0.1, "Game_PostRoundStart")
+	g_bIsReady = false
+	Game_RemoveTasks()
+	Game_StartTimer()
+	Game_ToggleCTs(1)
 }
 
 // ===============================================================================
@@ -134,14 +137,6 @@ public Event_CTWin()
 	}
 	
 	remove_task(g_iTaskSwapID)
-}
-
-public Game_PostRoundStart()
-{
-	g_bIsReady = false
-	Game_RemoveTasks()
-	Game_StartTimer()
-	Game_ToggleCTs(1)
 }
 
 // ===============================================================================
@@ -192,7 +187,7 @@ public Ham_OnPostUSPDeploy(iEnt)
 	if (!cs_get_weapon_silen(iEnt))
 		cs_set_weapon_silen(iEnt, 1, 0)  
 	
-	return PLUGIN_CONTINUE
+	return HAM_IGNORED
 }
 
 // ===============================================================================
@@ -213,7 +208,7 @@ public Ham_OnPreUSPPrimary(iEnt)
 		cs_set_weapon_silen(iEnt, 1, 0) 
 	}
 	
-	return PLUGIN_CONTINUE
+	return HAM_IGNORED
 }
 
 // ===============================================================================
@@ -234,7 +229,7 @@ public Ham_OnPostUSPSecondary(iEnt)
 		cs_set_weapon_silen(iEnt, 1, 0) 
 	}
 	
-	return PLUGIN_CONTINUE
+	return HAM_IGNORED
 }
 
 // ===============================================================================
@@ -249,7 +244,7 @@ public Ham_OnPostPlayerMaxRes(id)
 	if(!g_bIsReady && cs_get_user_team(id) == CS_TEAM_CT)
 		Game_DisablePlayer(id)
 		
-	return PLUGIN_CONTINUE	
+	return HAM_IGNORED	
 }
 
 // ===============================================================================
