@@ -9,7 +9,7 @@
 #include <engine>
 
 #define PLUGIN "usp_ninjas V2"
-#define VERSION "2.0.2"
+#define VERSION "2.0.3"
 #define AUTHOR "Kia 'Xi4' Armani"
 
 // ===============================================================================
